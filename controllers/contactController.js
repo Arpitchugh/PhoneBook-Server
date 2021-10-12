@@ -79,3 +79,29 @@ exports.getAllContacts = async (req, res) => {
 		});
 	}
 };
+
+/* --------------------------- get single contact --------------------------- */
+
+exports.getSingleContact = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const contact = await Contact.findById(id);
+
+		if (!contact) {
+			return res.send(400).send({
+				status: 'error',
+				message: 'invalid id',
+			});
+		}
+
+		res.status(200).send({
+			status: 'success',
+			data: contact,
+		});
+	} catch (err) {
+		res.status(400).send({
+			status: 'error',
+			message: 'invalid id',
+		});
+	}
+};

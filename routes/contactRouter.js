@@ -5,5 +5,7 @@ const router = express.Router();
 
 router.route('/contact/add').post(contactController.addNewContact);
 router.route('/contact/get-all').get(contactController.getAllContacts);
+router.route('/contact/get-one/:id').get(contactController.getSingleContact);
+
 
 module.exports = router;
