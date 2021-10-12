@@ -144,10 +144,44 @@ exports.patchContact = async (req, res) => {
 			{ new: true }
 		);
 
+		if (!updatedUser) {
+			return res.status(400).send({
+				status: 'error',
+				message: 'invalid id',
+			});
+		}
+
 		res.status(200).send({
 			status: 'success',
 			message: 'successfully updated contact',
 			data: updatedUser,
+		});
+	} catch (err) {
+		res.status(400).send({
+			status: 'error',
+			message: 'invalid id',
+		});
+	}
+};
+
+/* ----------------------------- delete contact ----------------------------- */
+exports.deleteContact = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const deletedContact = await Contact.findByIdAndDelete(id);
+
+		if (!deletedContact) {
+			return res.status(400).send({
+				status: 'error',
+				message: 'invalid id',
+			});
+		}
+
+		res.status(200).send({
+			status: 'success',
+			message: 'successfully deleted contact',
+			data: deletedContact,
 		});
 	} catch (err) {
 		res.status(400).send({
