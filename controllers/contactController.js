@@ -19,8 +19,7 @@ exports.addNewContact = async (req, res) => {
 		if (
 			typeof firstName !== 'string' ||
 			typeof lastName !== 'string' ||
-			typeof phone !== 'string' ||
-			typeof email !== 'string'
+			typeof phone !== 'string'
 		) {
 			return res.status(400).send({
 				status: 'error',
@@ -88,7 +87,7 @@ exports.getSingleContact = async (req, res) => {
 		const contact = await Contact.findById(id);
 
 		if (!contact) {
-			return res.send(400).send({
+			return res.status(400).send({
 				status: 'error',
 				message: 'invalid id',
 			});
@@ -97,6 +96,58 @@ exports.getSingleContact = async (req, res) => {
 		res.status(200).send({
 			status: 'success',
 			data: contact,
+		});
+	} catch (err) {
+		res.status(400).send({
+			status: 'error',
+			message: 'invalid id',
+		});
+	}
+};
+
+/* ----------------------------- update contact ----------------------------- */
+
+exports.patchContact = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { firstName, lastName, phone, email } = req.body;
+
+		// validate input
+		if (!firstName || !lastName || !phone) {
+			return res.status(400).send({
+				status: 'error',
+				message: 'firstName, lastName, phone all are required',
+			});
+		}
+
+		// check types of inputs
+		if (
+			typeof firstName !== 'string' ||
+			typeof lastName !== 'string' ||
+			typeof phone !== 'string'
+		) {
+			return res.status(400).send({
+				status: 'error',
+				message: 'typeof firstName, lastName, phone, email is not valid',
+			});
+		}
+
+		// update user
+		const updatedUser = await Contact.findByIdAndUpdate(
+			id,
+			{
+				firstName: firstName,
+				lastName: lastName,
+				phone: phone,
+				email: email,
+			},
+			{ new: true }
+		);
+
+		res.status(200).send({
+			status: 'success',
+			message: 'successfully updated contact',
+			data: updatedUser,
 		});
 	} catch (err) {
 		res.status(400).send({
